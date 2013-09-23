@@ -1,5 +1,5 @@
 //
-//  SBMyScene.h
+//  SBGameScene.h
 //  Slingball2
 //
 
@@ -8,6 +8,6 @@
 
 #import <SpriteKit/SpriteKit.h>
 
-@interface SBMyScene : SKScene
+@interface SBGameScene : SKScene
 
 @end

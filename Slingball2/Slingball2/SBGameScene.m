@@ -1,14 +1,14 @@
 //
-//  SBMyScene.m
+//  SBGameScene.m
 //  Slingball2
 //
 //  Created by Aaron Kaufer on 9/23/13.
 //  Copyright (c) 2013 Aaron Kaufer. All rights reserved.
 //
 
-#import "SBMyScene.h"
+#import "SBGameScene.h"
 
-@implementation SBMyScene
+@implementation SBGameScene
 
 -(id)initWithSize:(CGSize)size {    
     if (self = [super initWithSize:size]) {

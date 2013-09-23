@@ -17,7 +17,7 @@
 		5758933517F106A2000CEBCF /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5758933317F106A2000CEBCF /* Main_iPhone.storyboard */; };
 		5758933817F106A2000CEBCF /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5758933617F106A2000CEBCF /* Main_iPad.storyboard */; };
 		5758933B17F106A2000CEBCF /* SBViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5758933A17F106A2000CEBCF /* SBViewController.m */; };
-		5758933E17F106A2000CEBCF /* SBMyScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 5758933D17F106A2000CEBCF /* SBMyScene.m */; };
+		5758933E17F106A2000CEBCF /* SBGameScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 5758933D17F106A2000CEBCF /* SBGameScene.m */; };
 		5758934017F106A2000CEBCF /* Spaceship.png in Resources */ = {isa = PBXBuildFile; fileRef = 5758933F17F106A2000CEBCF /* Spaceship.png */; };
 		5758934217F106A2000CEBCF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5758934117F106A2000CEBCF /* Images.xcassets */; };
 		5758934917F106A2000CEBCF /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5758934817F106A2000CEBCF /* XCTest.framework */; };
@@ -25,6 +25,8 @@
 		5758934B17F106A2000CEBCF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5758932317F106A2000CEBCF /* UIKit.framework */; };
 		5758935317F106A2000CEBCF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5758935117F106A2000CEBCF /* InfoPlist.strings */; };
 		5758935517F106A2000CEBCF /* Slingball2Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5758935417F106A2000CEBCF /* Slingball2Tests.m */; };
+		5758936417F10807000CEBCF /* SBCharacter.m in Sources */ = {isa = PBXBuildFile; fileRef = 5758936117F10807000CEBCF /* SBCharacter.m */; };
+		5758936517F10807000CEBCF /* SBSlingshot.m in Sources */ = {isa = PBXBuildFile; fileRef = 5758936317F10807000CEBCF /* SBSlingshot.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,8 +55,8 @@
 		5758933717F106A2000CEBCF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
 		5758933917F106A2000CEBCF /* SBViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBViewController.h; sourceTree = "<group>"; };
 		5758933A17F106A2000CEBCF /* SBViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SBViewController.m; sourceTree = "<group>"; };
-		5758933C17F106A2000CEBCF /* SBMyScene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBMyScene.h; sourceTree = "<group>"; };
-		5758933D17F106A2000CEBCF /* SBMyScene.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SBMyScene.m; sourceTree = "<group>"; };
+		5758933C17F106A2000CEBCF /* SBGameScene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBGameScene.h; sourceTree = "<group>"; };
+		5758933D17F106A2000CEBCF /* SBGameScene.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SBGameScene.m; sourceTree = "<group>"; };
 		5758933F17F106A2000CEBCF /* Spaceship.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Spaceship.png; sourceTree = "<group>"; };
 		5758934117F106A2000CEBCF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		5758934717F106A2000CEBCF /* Slingball2Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Slingball2Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -62,6 +64,11 @@
 		5758935017F106A2000CEBCF /* Slingball2Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Slingball2Tests-Info.plist"; sourceTree = "<group>"; };
 		5758935217F106A2000CEBCF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		5758935417F106A2000CEBCF /* Slingball2Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Slingball2Tests.m; sourceTree = "<group>"; };
+		5758935F17F10807000CEBCF /* definitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = definitions.h; sourceTree = "<group>"; };
+		5758936017F10807000CEBCF /* SBCharacter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBCharacter.h; sourceTree = "<group>"; };
+		5758936117F10807000CEBCF /* SBCharacter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBCharacter.m; sourceTree = "<group>"; };
+		5758936217F10807000CEBCF /* SBSlingshot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBSlingshot.h; sourceTree = "<group>"; };
+		5758936317F10807000CEBCF /* SBSlingshot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBSlingshot.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,8 +136,9 @@
 				5758933617F106A2000CEBCF /* Main_iPad.storyboard */,
 				5758933917F106A2000CEBCF /* SBViewController.h */,
 				5758933A17F106A2000CEBCF /* SBViewController.m */,
-				5758933C17F106A2000CEBCF /* SBMyScene.h */,
-				5758933D17F106A2000CEBCF /* SBMyScene.m */,
+				5758933C17F106A2000CEBCF /* SBGameScene.h */,
+				5758933D17F106A2000CEBCF /* SBGameScene.m */,
+				5758935E17F107E9000CEBCF /* SBFiles */,
 				5758933F17F106A2000CEBCF /* Spaceship.png */,
 				5758934117F106A2000CEBCF /* Images.xcassets */,
 				5758932817F106A2000CEBCF /* Supporting Files */,
@@ -165,6 +173,18 @@
 				5758935117F106A2000CEBCF /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		5758935E17F107E9000CEBCF /* SBFiles */ = {
+			isa = PBXGroup;
+			children = (
+				5758935F17F10807000CEBCF /* definitions.h */,
+				5758936017F10807000CEBCF /* SBCharacter.h */,
+				5758936117F10807000CEBCF /* SBCharacter.m */,
+				5758936217F10807000CEBCF /* SBSlingshot.h */,
+				5758936317F10807000CEBCF /* SBSlingshot.m */,
+			);
+			name = SBFiles;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -269,8 +289,10 @@
 			files = (
 				5758932E17F106A2000CEBCF /* main.m in Sources */,
 				5758933B17F106A2000CEBCF /* SBViewController.m in Sources */,
+				5758936517F10807000CEBCF /* SBSlingshot.m in Sources */,
 				5758933217F106A2000CEBCF /* SBAppDelegate.m in Sources */,
-				5758933E17F106A2000CEBCF /* SBMyScene.m in Sources */,
+				5758933E17F106A2000CEBCF /* SBGameScene.m in Sources */,
+				5758936417F10807000CEBCF /* SBCharacter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

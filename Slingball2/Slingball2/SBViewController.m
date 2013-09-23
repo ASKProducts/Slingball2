@@ -7,7 +7,7 @@
 //
 
 #import "SBViewController.h"
-#import "SBMyScene.h"
+#import "SBGameScene.h"
 
 @implementation SBViewController
 
@@ -21,7 +21,7 @@
     skView.showsNodeCount = YES;
     
     // Create and configure the scene.
-    SKScene * scene = [SBMyScene sceneWithSize:skView.bounds.size];
+    SKScene * scene = [SBGameScene sceneWithSize:skView.bounds.size];
     scene.scaleMode = SKSceneScaleModeAspectFill;
     
     // Present the scene.
