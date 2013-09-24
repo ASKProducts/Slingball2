@@ -8,6 +8,10 @@
 
 #import <SpriteKit/SpriteKit.h>
 
+@class SBCharacter;
+
 @interface SBGameScene : SKScene
+
+@property (strong) SBCharacter *character;
 
 @end

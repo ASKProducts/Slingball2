@@ -47,7 +47,6 @@
         self.line1.path = l1Path;
         self.line1.strokeColor = SLINGSHOT_LINE_COLOR;
         self.line1.lineWidth = SLINGSHOT_LINE_WIDTH;
-        //self.line1.antialiased = NO;
         
         self.line2 = [[SKShapeNode alloc] init];
         CGMutablePathRef l2Path = CGPathCreateMutable();
@@ -55,7 +54,6 @@
         self.line2.path = l2Path;
         self.line2.strokeColor = SLINGSHOT_LINE_COLOR;
         self.line2.lineWidth = SLINGSHOT_LINE_WIDTH;
-        //self.line2.antialiased = NO;
         
         [self addChild:self.line1];
         [self addChild:self.line2];
@@ -78,8 +76,7 @@
     
     
     
-    [self runAction:[SKAction repeatActionForever:[SKAction customActionWithDuration:1.0/20.0
-                                                                         actionBlock:^(SKNode *node, CGFloat elapsedTime) {
+    [self runAction:[SKAction repeatActionForever:[SKAction customActionWithDuration:SLINGSHOT_FOLLOW_UPDATES_INTERVAL actionBlock:^(SKNode *node, CGFloat elapsedTime) {
         
         CGPoint p1point = CGPointMake(self.lineVector.dx, self.lineVector.dy);
         CGPoint p2point = CGPointMake(-self.lineVector.dx, -self.lineVector.dy);

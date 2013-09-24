@@ -37,5 +37,6 @@
 -(BOOL)attachNode:(SBCharacter*)node;
 -(void)detachNode;
 
+
 @end
 
