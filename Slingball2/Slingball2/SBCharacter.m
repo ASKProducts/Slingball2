@@ -27,6 +27,7 @@
         self.physicsBody.restitution = CHARACTER_RESTITUTION;
         self.physicsBody.linearDamping = CHARACTER_LINEAR_DAMPING;
         self.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:radius];
+        self.physicsBody.collisionBitMask ^= SLINGSHOT_ENDPOINT_CATEGORY_BIT_MASK;
         
         self.radius = radius;
     }
@@ -37,13 +38,18 @@
     if(self.attachedSlingshot)
         return;
     
-    //CGFloat s = fabs(CGVectorMagnitude(self.physicsBody.velocity));
-    [self runAction:[SKAction sequence:@[[SKAction waitForDuration:0.1],
+    
+    
+    
+    self.attachedSlingshot = slingshot;
+    
+    CGFloat speed = CGVectorMagnitude(self.physicsBody.velocity);
+    [self runAction:[SKAction sequence:@[[SKAction waitForDuration:40/speed],
                                          [SKAction customActionWithDuration:0 actionBlock:^(SKNode *n, CGFloat f){
         self.physicsBody.velocity = CGVectorMake(0, 0);
         self.physicsBody.affectedByGravity = NO;
         self.position = slingshot.position;
-        self.attachedSlingshot = slingshot;
+        
     }],[SKAction moveTo:slingshot.position duration:0.2]]] withKey:@"moving in"];
     
     
@@ -102,7 +108,7 @@
     if(lineVector.dy == 0) lineVector.dy = 0.01;
     
     CGPoint point1 = CGPointPlusVector(slingshot.position, lineVector);
-    CGPoint point2 = CGPointPlusVector(slingshot.position, CGVectorScale(lineVector, -1));
+    CGPoint point2 = CGPointPlusVector(slingshot.position, CGVectorNegate(lineVector));
     
     CGFloat m = (point1.y-point2.y)/(point1.x-point2.x);
     CGFloat b = point1.y-point1.x*m;

@@ -26,6 +26,10 @@ CGVector CGVectorScale(CGVector v, CGFloat scale){
     return CGVectorMake(v.dx * scale, v.dy * scale);
 }
 
+CGVector CGVectorNegate(CGVector v){
+    return CGVectorScale(v, -1);
+}
+
 #pragma mark - CGPoint
 
 CGPoint CGPointFromVector(CGVector v){
@@ -44,7 +48,6 @@ CGFloat CGVectorMagnitude(CGVector v){
 
 CGFloat CGPointDistance(CGPoint p1, CGPoint p2){
     return CGVectorMagnitude(CGVectorFromDistance(p1, p2));
-    //return sqrtf((p1.x-p2.x)*(p1.x-p2.x) + (p1.y-p2.y)*(p1.y-p2.y));
 }
 
 #pragma mark - CGRect

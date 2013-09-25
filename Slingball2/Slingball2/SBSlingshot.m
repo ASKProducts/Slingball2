@@ -25,15 +25,21 @@
         self.point1.strokeColor = SLINGSHOT_ENDPOINT_LINE_COLOR;
         self.point1.fillColor = SLINGSHOT_ENDPOINT_FILL_COLOR;
         self.point1.lineWidth = SLINGSHOT_ENDPOINT_LINEWIDTH;
+        self.point1.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:SLINGSHOT_ENDPOINT_SIZE/2];
+        self.point1.physicsBody.dynamic = NO;
+        self.point1.physicsBody.categoryBitMask = SLINGSHOT_ENDPOINT_CATEGORY_BIT_MASK;
         
         self.point2 = [[SKShapeNode alloc] init];
         CGMutablePathRef p2Path = CGPathCreateMutable();
-        CGPoint p2point = CGPointFromVector(CGVectorScale(self.lineVector, -1));
+        CGPoint p2point = CGPointFromVector(CGVectorNegate(self.lineVector));
         CGPathAddEllipseInRect(p2Path, NULL, CGRectFromCircle(p2point, SLINGSHOT_ENDPOINT_SIZE/2));
         self.point2.path = p2Path;
         self.point2.strokeColor = SLINGSHOT_ENDPOINT_LINE_COLOR;
         self.point2.fillColor = SLINGSHOT_ENDPOINT_FILL_COLOR;
         self.point2.lineWidth = SLINGSHOT_ENDPOINT_LINEWIDTH;
+        self.point2.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:SLINGSHOT_ENDPOINT_SIZE/2];
+        self.point2.physicsBody.dynamic = NO;
+        self.point2.physicsBody.categoryBitMask = SLINGSHOT_ENDPOINT_CATEGORY_BIT_MASK;
         
         self.line1 = [[SKShapeNode alloc] init];
         CGMutablePathRef l1Path = CGPathCreateMutable();
@@ -60,8 +66,32 @@
     return self;
 }
 
+-(void)updateLineVector:(CGVector)lineVector{
+    self.lineVector = lineVector;
+    
+    CGMutablePathRef p1Path = CGPathCreateMutable();
+    CGPoint p1point = CGPointFromVector(self.lineVector);
+    CGPathAddEllipseInRect(p1Path, NULL, CGRectFromCircle(p1point, SLINGSHOT_ENDPOINT_SIZE/2));
+    self.point1.path = p1Path;
+    
+    CGMutablePathRef p2Path = CGPathCreateMutable();
+    CGPoint p2point = CGPointFromVector(CGVectorNegate(self.lineVector));
+    CGPathAddEllipseInRect(p2Path, NULL, CGRectFromCircle(p2point, SLINGSHOT_ENDPOINT_SIZE/2));
+    self.point2.path = p2Path;
+    
+    CGMutablePathRef l1Path = CGPathCreateMutable();
+    CGPathMoveToPoint(l1Path, NULL, p1point.x, p1point.y);
+    CGPathAddLineToPoint(l1Path, NULL, p2point.x,p2point.y);
+    self.line1.path = l1Path;
+    
+    self.line2 = [[SKShapeNode alloc] init];
+    CGMutablePathRef l2Path = CGPathCreateMutable();
+    CGPathMoveToPoint(l2Path, NULL, p2point.x, p2point.y);
+    self.line2.path = l2Path;
+}
+
 -(BOOL)attachNode:(SBCharacter*)node{
-    if(self.attachedNode)
+    if(self.attachedNode || node.attachedSlingshot)
         return NO;
     
     self.attachedNode = node;
@@ -74,7 +104,7 @@
     [self runAction:[SKAction repeatActionForever:[SKAction customActionWithDuration:SLINGSHOT_FOLLOW_UPDATES_INTERVAL actionBlock:^(SKNode *node, CGFloat elapsedTime) {
         
         CGPoint p1point = CGPointFromVector(self.lineVector);
-        CGPoint p2point = CGPointFromVector(CGVectorScale(self.lineVector, -1));
+        CGPoint p2point = CGPointFromVector(CGVectorNegate(self.lineVector));
         CGPoint nodePoint = [self.parent convertPoint:self.attachedNode.position toNode:self];
         
         CGMutablePathRef l1Path = CGPathCreateMutable();

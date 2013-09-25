@@ -33,6 +33,7 @@
 
 //the default constructor
 -(id)initWithPosition:(CGPoint)pos andLineVector:(CGVector)lv;
+-(void)updateLineVector:(CGVector)lineVector;
 
 -(BOOL)attachNode:(SBCharacter*)node;
 -(void)detachNode;
