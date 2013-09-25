@@ -24,7 +24,6 @@
 
 #define WALL_RESTITUTION 1.0
 
-
 CGVector CGVectorFromDistance(CGPoint p1, CGPoint p2);
 CGVector CGVectorSum(CGVector v1, CGVector v2);
 CGVector CGVectorProduct(CGVector v1, CGVector v2);

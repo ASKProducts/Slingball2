@@ -70,7 +70,7 @@
 		5758936217F10807000CEBCF /* SBSlingshot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBSlingshot.h; sourceTree = "<group>"; };
 		5758936317F10807000CEBCF /* SBSlingshot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBSlingshot.m; sourceTree = "<group>"; };
 		5758936817F26B8A000CEBCF /* Definitions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Definitions.m; sourceTree = "<group>"; };
-		5758936A17F277AF000CEBCF /* Definitions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Definitions.h; path = ../Definitions.h; sourceTree = "<group>"; };
+		5758936C17F27974000CEBCF /* Definitions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Definitions.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -180,7 +180,7 @@
 		5758935E17F107E9000CEBCF /* SBFiles */ = {
 			isa = PBXGroup;
 			children = (
-				5758936A17F277AF000CEBCF /* Definitions.h */,
+				5758936C17F27974000CEBCF /* Definitions.h */,
 				5758936817F26B8A000CEBCF /* Definitions.m */,
 				5758936017F10807000CEBCF /* SBCharacter.h */,
 				5758936117F10807000CEBCF /* SBCharacter.m */,

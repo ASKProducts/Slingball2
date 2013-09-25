@@ -7,7 +7,7 @@
 //
 
 #import <SpriteKit/SpriteKit.h>
-//#include "definitions.h"
+#include "Definitions.h"
 
 @class SBSlingshot;
 
