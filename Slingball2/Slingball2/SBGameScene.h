@@ -13,5 +13,6 @@
 @interface SBGameScene : SKScene
 
 @property (strong) SBCharacter *character;
+@property (strong) NSMutableArray *slingshotPool;
 
 @end

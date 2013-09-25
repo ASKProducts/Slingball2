@@ -7,7 +7,7 @@
 //
 
 #import <SpriteKit/SpriteKit.h>
-#import "definitions.h"
+
 
 
 @class SBCharacter;

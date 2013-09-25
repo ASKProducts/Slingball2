@@ -1,13 +1,13 @@
 //
-//  definitions.h
-//  sb2slingshot
+//  Definitions.h
+//  Slingball2
 //
-//  Created by Aaron Kaufer on 9/22/13.
+//  Created by Aaron Kaufer on 9/24/13.
 //  Copyright (c) 2013 Aaron Kaufer. All rights reserved.
 //
 
-#ifndef sb2slingshot_definitions_h
-#define sb2slingshot_definitions_h
+
+#import <Foundation/Foundation.h>
 
 #define SLINGSHOT_ENDPOINT_SIZE 10
 #define SLINGSHOT_ENDPOINT_LINE_COLOR [UIColor blackColor]
@@ -24,8 +24,16 @@
 
 #define WALL_RESTITUTION 1.0
 
-#define CGVectorMagnitude(v) (sqrtf(v.dx*v.dx+v.dy*v.dy))
-#define distanceBetween(p1, p2) (sqrtf((p1.x-p2.x)*(p1.x-p2.x) + (p1.y-p2.y)*(p1.y-p2.y)))
 
+CGVector CGVectorFromDistance(CGPoint p1, CGPoint p2);
+CGVector CGVectorSum(CGVector v1, CGVector v2);
+CGVector CGVectorProduct(CGVector v1, CGVector v2);
+CGVector CGVectorScale(CGVector v, CGFloat scale);
 
-#endif
+CGPoint CGPointFromVector(CGVector v);
+CGPoint CGPointPlusVector(CGPoint p, CGVector v);
+
+CGFloat CGVectorMagnitude(CGVector v);
+CGFloat CGPointDistance(CGPoint p1, CGPoint p2);
+
+CGRect CGRectFromCircle(CGPoint c, CGFloat r);

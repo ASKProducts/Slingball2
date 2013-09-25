@@ -8,6 +8,7 @@
 
 #import "SBCharacter.h"
 #import "SBSlingshot.h"
+#import "Definitions.h"
 
 @implementation SBCharacter
 //@synthesize position = _position;
@@ -26,6 +27,8 @@
         self.physicsBody.restitution = CHARACTER_RESTITUTION;
         self.physicsBody.linearDamping = CHARACTER_LINEAR_DAMPING;
         self.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:radius];
+        
+        self.radius = radius;
     }
     return self;
 }
@@ -50,20 +53,14 @@
     if(!self.attachedSlingshot)
         return;
     
-    
-    //self.physicsBody.affectedByGravity = NO;
-    
     CGFloat gravity = [(SKScene*)self.parent physicsWorld].gravity.dy;
     SBSlingshot *slingshot = self.attachedSlingshot;
 
-    CGVector dist = CGVectorMake((self.position.x-slingshot.position.x),
-                                 (self.position.y-slingshot.position.y));
+    CGVector dist = CGVectorFromDistance(slingshot.position, self.position);
     
-    [self.physicsBody setVelocity:CGVectorMake(dist.dx*gravity*CHARACTER_VELOCITY_TO_PULL_RATIO,
-                                               dist.dy*gravity*CHARACTER_VELOCITY_TO_PULL_RATIO)];
+    [self.physicsBody setVelocity:CGVectorScale(dist, gravity*CHARACTER_VELOCITY_TO_PULL_RATIO)];
     
-    CGFloat timeToCenter = fabs((slingshot.position.x-self.position.x)/
-                                (dist.dx*gravity*CHARACTER_VELOCITY_TO_PULL_RATIO));
+    CGFloat timeToCenter = fabs(dist.dx / self.physicsBody.velocity.dx);
     
     [self runAction:[SKAction sequence:@[[SKAction waitForDuration:timeToCenter],
                                          [SKAction runBlock:^{
@@ -83,23 +80,42 @@
         return;
     }
     
-    
     CGFloat vectorSize = CGVectorMagnitude(self.attachedSlingshot.lineVector)*SLINGSHOT_PULL_TO_LINE_RATIO;
-    if(distanceBetween(pos, self.attachedSlingshot.position) > vectorSize){
+    
+    if(CGPointDistance(pos, self.attachedSlingshot.position) > vectorSize){
         
-        CGVector delta = CGVectorMake(pos.x-self.attachedSlingshot.position.x,
-                                      pos.y-self.attachedSlingshot.position.y);
+        CGVector dist = CGVectorFromDistance(self.attachedSlingshot.position, pos);
+        CGVector delta = CGVectorScale(dist, vectorSize/CGVectorMagnitude(dist));
         
-        float x = vectorSize/CGVectorMagnitude(delta)*(delta.dx);
-        float y = vectorSize/CGVectorMagnitude(delta)*(delta.dy);
-        
-        [super setPosition:CGPointMake(self.attachedSlingshot.position.x + x,
-                                       self.attachedSlingshot.position.y + y)];
+        [super setPosition:CGPointPlusVector(self.attachedSlingshot.position, delta)];
         
         return;
     }
     
     [super setPosition:pos];
+}
+
+-(BOOL)collidesWithSlingshot:(SBSlingshot*)slingshot{
+    
+    CGVector lineVector = slingshot.lineVector;
+    if(lineVector.dx == 0) lineVector.dx = 0.01;
+    if(lineVector.dy == 0) lineVector.dy = 0.01;
+    
+    CGPoint point1 = CGPointPlusVector(slingshot.position, lineVector);
+    CGPoint point2 = CGPointPlusVector(slingshot.position, CGVectorScale(lineVector, -1));
+    
+    CGFloat m = (point1.y-point2.y)/(point1.x-point2.x);
+    CGFloat b = point1.y-point1.x*m;
+
+    CGFloat x=(self.position.y+self.position.x/m-b)/(m+1/m);
+    CGFloat y=m*x+b;
+    
+    CGPoint inter = CGPointMake(x, y);
+    if(CGPointDistance(inter, self.position) <= self.radius ){
+        if(MIN(point1.x, point2.x) <= inter.x && inter.x <= MAX(point1.x, point2.x))
+            return YES;
+    }
+    return NO;
 }
 
 @end
