@@ -84,7 +84,6 @@
     CGPathAddLineToPoint(l1Path, NULL, p2point.x,p2point.y);
     self.line1.path = l1Path;
     
-    self.line2 = [[SKShapeNode alloc] init];
     CGMutablePathRef l2Path = CGPathCreateMutable();
     CGPathMoveToPoint(l2Path, NULL, p2point.x, p2point.y);
     self.line2.path = l2Path;

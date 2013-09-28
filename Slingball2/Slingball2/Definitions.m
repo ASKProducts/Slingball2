@@ -30,6 +30,14 @@ CGVector CGVectorNegate(CGVector v){
     return CGVectorScale(v, -1);
 }
 
+CGVector CGVectorMakeUnit(CGFloat direction){
+    return CGVectorMake(cosf(direction*(M_PI/180.0f)), sinf(direction*(M_PI/180.0f)));
+}
+
+CGVector CGVectorMakeMag(CGFloat magnitude, CGFloat direction){
+    return CGVectorScale(CGVectorMakeUnit(direction), magnitude);
+}
+
 #pragma mark - CGPoint
 
 CGPoint CGPointFromVector(CGVector v){

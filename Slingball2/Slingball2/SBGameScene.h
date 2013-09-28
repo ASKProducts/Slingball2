@@ -27,5 +27,6 @@
 -(void)recycleSlingshot:(SBSlingshot*)slingshot;
 /* the following either reuses a slingshot from the slingshot bin, or makes a new one if there is none in the bin */
 -(SBSlingshot*)generateSlingshotWithPosition:(CGPoint)pos andLineVector:(CGVector)lineVector;
-
+/* the following calls the above method using random number generation to generate a slingshot */
+-(SBSlingshot*)generateRandomSlingshotWithY:(CGFloat)y andMagnitude:(CGFloat)mag;
 @end

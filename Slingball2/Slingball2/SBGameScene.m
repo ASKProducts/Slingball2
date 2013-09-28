@@ -21,6 +21,8 @@
         /* Setup your scene here */
         
         self.backgroundColor = [SKColor colorWithRed:0.15 green:0.15 blue:0.3 alpha:1.0];
+        self.physicsWorld.gravity = SCENE_GRAVITY;
+        
         
         self.walls = [SKNode node];
         self.walls.physicsBody = [SKPhysicsBody bodyWithEdgeLoopFromRect:CGRectInset(self.frame, 0, -CHARACTER_RADIUS*100)];
@@ -37,18 +39,18 @@
         self.slingshotBin = [NSMutableArray arrayWithCapacity:1000];
         self.activeSlingshots = [NSMutableArray arrayWithCapacity:1000];
         
+        SBSlingshot *first = [self generateSlingshotWithPosition:CHARACTER_START_POSITION
+                                                   andLineVector:CGVectorMake(SLINGSHOT_LINE_RADIUS, 0)];
         
-        [self addSlingshot:[self generateSlingshotWithPosition:CGPointMake(size.width/2, 100)
-                                                   andLineVector:CGVectorMake(30, 0)]];
+        [self addSlingshot:first];
         
-        [self addSlingshot:[self generateSlingshotWithPosition:CGPointMake(size.width/2, 200)
-                                                   andLineVector:CGVectorMake(30, 0)]];
+        [first attachNode:self.character];
         
-        [self addSlingshot:[self generateSlingshotWithPosition:CGPointMake(size.width/2, 300)
-                                                   andLineVector:CGVectorMake(30, 0)]];
+        //[self addSlingshot:[self generateRandomSlingshotWithY:200 andMagnitude:SLINGSHOT_LINE_RADIUS]];
         
-        [self addSlingshot:[self generateSlingshotWithPosition:CGPointMake(size.width/2, 400)
-                                                   andLineVector:CGVectorMake(30, 0)]];
+        //[self addSlingshot:[self generateRandomSlingshotWithY:300 andMagnitude:SLINGSHOT_LINE_RADIUS]];
+        
+        //[self addSlingshot:[self generateRandomSlingshotWithY:400 andMagnitude:SLINGSHOT_LINE_RADIUS]];
         
         
         
@@ -80,12 +82,20 @@
                 [self.character launch];
         }
         
-        
         if(touch.tapCount == 2 && touch.phase == UITouchPhaseBegan){
+            self.anchorPoint = CGPointZero;
             self.character.physicsBody.velocity = CGVectorMake(0, 0);
             self.character.position = CHARACTER_START_POSITION;
-            self.anchorPoint = CGPointZero;
             self.walls.position = CGPointZero;
+            
+            int c = (int)self.activeSlingshots.count;
+            for(int i = 0; i < c; i++)
+                [self recycleSlingshot:[self.activeSlingshots firstObject]];
+            
+            
+            [self addSlingshot:[self generateSlingshotWithPosition:CGPointMake(self.size.width/2, 100)
+                                                     andLineVector:CGVectorMake(SLINGSHOT_LINE_RADIUS, 0)]];
+            
         }
     }
 }
@@ -98,6 +108,7 @@
 -(void)deleteSlingshot:(SBSlingshot*)slingshot{
     [self.activeSlingshots removeObject:slingshot];
     [slingshot removeFromParent];
+    
 }
 -(void)recycleSlingshot:(SBSlingshot*)slingshot{
     [self deleteSlingshot:slingshot];
@@ -106,17 +117,29 @@
 -(SBSlingshot*)generateSlingshotWithPosition:(CGPoint)pos andLineVector:(CGVector)lineVector{
     if(self.slingshotBin.count == 0)
         return [[SBSlingshot alloc] initWithPosition:pos andLineVector:lineVector];
-    SBSlingshot *slingshot = [self.activeSlingshots lastObject];
+    SBSlingshot *slingshot = [self.slingshotBin lastObject];
+    [self.slingshotBin removeLastObject];
     slingshot.position = pos;
     [slingshot updateLineVector:lineVector];
     return slingshot;
 }
 
+-(SBSlingshot*)generateRandomSlingshotWithY:(CGFloat)y andMagnitude:(CGFloat)mag{
+    CGVector lastVector = [(SBSlingshot*)[self.activeSlingshots lastObject] lineVector];
+    CGFloat lastDirection = atan2f(lastVector.dy, lastVector.dx);
+    int newDirection = lastDirection-SLINGSHOT_ANGLE_DEVIATION + arc4random()%(SLINGSHOT_ANGLE_DEVIATION*2);
+    return [self generateSlingshotWithPosition:CGPointMake(RANDOM(                SLINGSHOT_LINE_RADIUS*2,
+                                                                  self.size.width-SLINGSHOT_LINE_RADIUS*2), y)
+                                 andLineVector:CGVectorMakeMag(mag, newDirection)];
+}
+
+
+
 
 #pragma mark - updates
 -(void)update:(CFTimeInterval)currentTime {
-    if(previousTime == 0)previousTime = currentTime;
-    double elapsedTime = currentTime-previousTime;
+    //if(previousTime == 0)previousTime = currentTime;
+    //double elapsedTime = currentTime-previousTime;
     
     /* if the character is above 3/5 of the screen, then move the screen down */
     CGFloat relativeY = self.character.position.y + self.anchorPoint.y*self.size.height;
@@ -129,11 +152,32 @@
     }
 
     
-    /* Attach character to slingshot if necesary */
+    NSMutableArray *toRecycle = [NSMutableArray array];
     for (SBSlingshot *slingshot in self.activeSlingshots) {
+        /* Attach character to slingshot if necesary */
         if([self.character collidesWithSlingshot:slingshot]){
             [slingshot attachNode:self.character];
         }
+        
+        /* recycle slingshot if it is below the screen */
+        CGRect actualFrame = [slingshot calculateAccumulatedFrame];
+        if(actualFrame.origin.y+actualFrame.size.height < self.frame.origin.y){
+            [toRecycle addObject:slingshot];
+        }
+    }
+    for (SBSlingshot *slingshot in toRecycle) {
+        [self recycleSlingshot:slingshot];
+    }
+    
+    
+    SBSlingshot *lastSlingshot = [self.activeSlingshots lastObject];
+    CGFloat highestSlingshotY = MAX(CGPointPlusVector(lastSlingshot.position, lastSlingshot.lineVector).y,
+                                    CGPointPlusVector(lastSlingshot.position, CGVectorNegate(lastSlingshot.lineVector)).y);
+    while (highestSlingshotY < CGRectGetMaxY(self.frame)) {
+        [self addSlingshot:[self generateRandomSlingshotWithY:highestSlingshotY+SLINGSHOT_SPACING
+                                                 andMagnitude:SLINGSHOT_LINE_RADIUS]];
+        lastSlingshot = [self.activeSlingshots lastObject];
+        highestSlingshotY = CGPointPlusVector(lastSlingshot.position, lastSlingshot.lineVector).y;
     }
     
     previousTime = currentTime;

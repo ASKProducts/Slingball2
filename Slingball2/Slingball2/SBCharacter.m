@@ -28,6 +28,7 @@
         self.physicsBody.linearDamping = CHARACTER_LINEAR_DAMPING;
         self.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:radius];
         self.physicsBody.collisionBitMask ^= SLINGSHOT_ENDPOINT_CATEGORY_BIT_MASK;
+        self.physicsBody.mass = CHARACTER_MASS;
         
         self.radius = radius;
     }
@@ -44,7 +45,7 @@
     self.attachedSlingshot = slingshot;
     
     CGFloat speed = CGVectorMagnitude(self.physicsBody.velocity);
-    [self runAction:[SKAction sequence:@[[SKAction waitForDuration:40/speed],
+    [self runAction:[SKAction sequence:@[[SKAction waitForDuration:(speed>35)?35/speed:speed/400],
                                          [SKAction customActionWithDuration:0 actionBlock:^(SKNode *n, CGFloat f){
         self.physicsBody.velocity = CGVectorMake(0, 0);
         self.physicsBody.affectedByGravity = NO;
@@ -78,6 +79,7 @@
 }
 
 -(void)setPosition:(CGPoint)pos{
+    
     
     if([self actionForKey:@"moving in"])return;
     
