@@ -8,9 +8,13 @@
 
 #import "SBCharacter.h"
 #import "SBSlingshot.h"
+#import "SBGameScene.h"
 #import "Definitions.h"
 
-@implementation SBCharacter
+@implementation SBCharacter{
+    CGPoint originalPosition;
+    BOOL specialOverride;
+}
 //@synthesize position = _position;
 
 - (id)initWithCircleOfRadius:(CGFloat)radius andLineWidth:(CGFloat)lineWidth andFillColor:(UIColor*)fillColor andStrokeColor:(UIColor*)strokeColor{
@@ -27,9 +31,10 @@
         self.physicsBody.restitution = CHARACTER_RESTITUTION;
         self.physicsBody.linearDamping = CHARACTER_LINEAR_DAMPING;
         self.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:radius];
-        self.physicsBody.collisionBitMask ^= SLINGSHOT_ENDPOINT_CATEGORY_BIT_MASK;
-        self.physicsBody.mass = CHARACTER_MASS;
+        self.physicsBody.collisionBitMask = ~(SLINGSHOT_ENDPOINT_CATEGORY_BIT_MASK);
         
+        self.physicsBody.mass = CHARACTER_MASS;
+        self.physicsBody.categoryBitMask = CHARACTER_CATEGORY_BIT_MASK;
         self.radius = radius;
     }
     return self;
@@ -39,26 +44,31 @@
     if(self.attachedSlingshot)
         return;
     
-    
-    
-    
     self.attachedSlingshot = slingshot;
     
-    CGFloat speed = CGVectorMagnitude(self.physicsBody.velocity);
-    [self runAction:[SKAction sequence:@[[SKAction waitForDuration:(speed>35)?35/speed:speed/400],
+    //self.physicsBody.velocity = CGVectorScale(self.physicsBody.velocity,
+    //                                          CHARACTER_SLINGSHOT_VELOCITY_SCALE);
+    
+    [self runAction:[SKAction sequence:@[[SKAction waitForDuration:CHARACTER_SLINGSHOT_SLOW_TIME],
                                          [SKAction customActionWithDuration:0 actionBlock:^(SKNode *n, CGFloat f){
         self.physicsBody.velocity = CGVectorMake(0, 0);
         self.physicsBody.affectedByGravity = NO;
-        self.position = slingshot.position;
+        originalPosition = self.position;
         
-    }],[SKAction moveTo:slingshot.position duration:0.2]]] withKey:@"moving in"];
-    
-    
+    }],[SKAction customActionWithDuration:CHARACTER_SLINGSHOT_SLOW_TIME*2  actionBlock:^(SKNode *node, CGFloat elapsedTime) {
+        specialOverride = YES;
+        CGVector distVector = CGVectorFromDistance(originalPosition, slingshot.position);
+        [node setPosition:CGPointPlusVector(originalPosition, CGVectorScale(distVector, elapsedTime/0.2))];
+        specialOverride = NO;
+    }], [SKAction performSelector:@selector(adjustScreen) onTarget:(SBGameScene*)self.scene]]] withKey:@"moving in"];
+    [self setPosition:slingshot.position];
 }
 
 -(void)launch{
     if(!self.attachedSlingshot)
         return;
+    
+    [self.attachedSlingshot startTracking];
     
     CGFloat gravity = [(SKScene*)self.parent physicsWorld].gravity.dy;
     SBSlingshot *slingshot = self.attachedSlingshot;
@@ -80,6 +90,10 @@
 
 -(void)setPosition:(CGPoint)pos{
     
+    if(specialOverride){
+        [super setPosition:pos];
+        return;
+    }
     
     if([self actionForKey:@"moving in"])return;
     
@@ -87,6 +101,22 @@
         [super setPosition:pos];
         return;
     }
+    
+    CGPoint p1point = CGPointFromVector(self.attachedSlingshot.lineVector);
+    CGPoint p2point = CGPointFromVector(CGVectorNegate(self.attachedSlingshot.lineVector));
+    CGPoint nodePoint = [self.attachedSlingshot.parent convertPoint:self.position toNode:self.attachedSlingshot];
+    
+    CGMutablePathRef l1Path = CGPathCreateMutable();
+    CGPathMoveToPoint(l1Path, NULL, p1point.x, p1point.y);
+    CGPathAddLineToPoint(l1Path, NULL, nodePoint.x,nodePoint.y);
+    
+    CGMutablePathRef l2Path = CGPathCreateMutable();
+    CGPathMoveToPoint(l2Path, NULL, p2point.x, p2point.y);
+    CGPathAddLineToPoint(l2Path, NULL, nodePoint.x,nodePoint.y);
+    
+    self.attachedSlingshot.line1.path = l1Path;
+    self.attachedSlingshot.line2.path = l2Path;
+    
     
     CGFloat vectorSize = CGVectorMagnitude(self.attachedSlingshot.lineVector)*SLINGSHOT_PULL_TO_LINE_RATIO;
     

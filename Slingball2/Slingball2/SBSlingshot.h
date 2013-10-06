@@ -38,6 +38,8 @@
 -(BOOL)attachNode:(SBCharacter*)node;
 -(void)detachNode;
 
+/* tracking refers to having the lines attach to the attached node */
+-(void)startTracking;
 
 @end
 

@@ -17,6 +17,7 @@
 @property (strong) NSMutableArray *activeSlingshots;
 @property (strong) NSMutableArray *slingshotBin;
 
+/* the following is a holder for a physicsbody which the character bounces off of */
 @property (strong) SKNode *walls;
 
 -(void)registerTouches:(NSSet *)touches;
@@ -29,4 +30,7 @@
 -(SBSlingshot*)generateSlingshotWithPosition:(CGPoint)pos andLineVector:(CGVector)lineVector;
 /* the following calls the above method using random number generation to generate a slingshot */
 -(SBSlingshot*)generateRandomSlingshotWithY:(CGFloat)y andMagnitude:(CGFloat)mag;
+
+/* move the objects on the screen down when the character passes halfway */
+-(void)adjustScreen;
 @end

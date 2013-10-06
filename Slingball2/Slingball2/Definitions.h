@@ -30,12 +30,16 @@
 #define CHARACTER_RESTITUTION 1.0
 #define CHARACTER_LINEAR_DAMPING 0.1
 #define CHARACTER_START_POSITION CGPointMake(self.size.width/2, 1.0/5.0*self.size.height)
-#define CHARACTER_RELATIVE_MAX_HEIGHT (3.0/5.0)*self.size.height
+#define CHARACTER_RELATIVE_MAX_HEIGHT (1.0/2.0)*self.size.height
 #define CHARACTER_RADIUS DEVICE_SPECIFIC(10,30)
 #define CHARACTER_MASS DEVICE_SPECIFIC(10,35)
+#define CHARACTER_CATEGORY_BIT_MASK (1 << 1)
+#define CHARACTER_SLINGSHOT_VELOCITY_SCALE (4.0/5.0)
+#define CHARACTER_SLINGSHOT_SLOW_TIME 0.1
 
 #define SCENE_GRAVITY CGVectorMake(0,DEVICE_SPECIFIC(-7,-10))
 #define WALL_RESTITUTION 1.0
+#define SCREEN_ADJUSTMENT_TIME 0.2
 
 #define ABS_(A) ((A)<0?-(A):(A))
 #define RANDOM(a,b) ((int)a)+(arc4random()%((int)ABS_(b-a)))
@@ -55,3 +59,13 @@ CGFloat CGVectorMagnitude(CGVector v);
 CGFloat CGPointDistance(CGPoint p1, CGPoint p2);
 
 CGRect CGRectFromCircle(CGPoint c, CGFloat r);
+
+
+
+
+
+
+
+
+
+

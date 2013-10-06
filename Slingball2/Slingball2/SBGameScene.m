@@ -23,7 +23,6 @@
         self.backgroundColor = [SKColor colorWithRed:0.15 green:0.15 blue:0.3 alpha:1.0];
         self.physicsWorld.gravity = SCENE_GRAVITY;
         
-        
         self.walls = [SKNode node];
         self.walls.physicsBody = [SKPhysicsBody bodyWithEdgeLoopFromRect:CGRectInset(self.frame, 0, -CHARACTER_RADIUS*100)];
         self.walls.physicsBody.restitution = WALL_RESTITUTION;
@@ -34,6 +33,7 @@
                                                         andFillColor:[UIColor blueColor]
                                                       andStrokeColor:[UIColor whiteColor]];
         self.character.position = CHARACTER_START_POSITION;
+        
         [self addChild:self.character];
         
         self.slingshotBin = [NSMutableArray arrayWithCapacity:1000];
@@ -45,16 +45,6 @@
         [self addSlingshot:first];
         
         [first attachNode:self.character];
-        
-        //[self addSlingshot:[self generateRandomSlingshotWithY:200 andMagnitude:SLINGSHOT_LINE_RADIUS]];
-        
-        //[self addSlingshot:[self generateRandomSlingshotWithY:300 andMagnitude:SLINGSHOT_LINE_RADIUS]];
-        
-        //[self addSlingshot:[self generateRandomSlingshotWithY:400 andMagnitude:SLINGSHOT_LINE_RADIUS]];
-        
-        
-        
-        
         
     }
     return self;
@@ -125,12 +115,9 @@
 }
 
 -(SBSlingshot*)generateRandomSlingshotWithY:(CGFloat)y andMagnitude:(CGFloat)mag{
-    CGVector lastVector = [(SBSlingshot*)[self.activeSlingshots lastObject] lineVector];
-    CGFloat lastDirection = atan2f(lastVector.dy, lastVector.dx);
-    int newDirection = lastDirection-SLINGSHOT_ANGLE_DEVIATION + arc4random()%(SLINGSHOT_ANGLE_DEVIATION*2);
     return [self generateSlingshotWithPosition:CGPointMake(RANDOM(                SLINGSHOT_LINE_RADIUS*2,
                                                                   self.size.width-SLINGSHOT_LINE_RADIUS*2), y)
-                                 andLineVector:CGVectorMakeMag(mag, newDirection)];
+                                 andLineVector:CGVectorMakeMag(mag, 0)];
 }
 
 
@@ -141,22 +128,15 @@
     //if(previousTime == 0)previousTime = currentTime;
     //double elapsedTime = currentTime-previousTime;
     
-    /* if the character is above 3/5 of the screen, then move the screen down */
-    CGFloat relativeY = self.character.position.y + self.anchorPoint.y*self.size.height;
-    if(relativeY > CHARACTER_RELATIVE_MAX_HEIGHT){
-        CGFloat displacement = relativeY-CHARACTER_RELATIVE_MAX_HEIGHT;
-        self.anchorPoint = CGPointMake(self.anchorPoint.x, self.anchorPoint.y - displacement/self.size.height);
-        /* the walls can never move */
-        self.walls.position = CGPointMake(self.walls.position.x, self.walls.position.y+displacement);
-        
-    }
-
+    
+    
     
     NSMutableArray *toRecycle = [NSMutableArray array];
     for (SBSlingshot *slingshot in self.activeSlingshots) {
         /* Attach character to slingshot if necesary */
-        if([self.character collidesWithSlingshot:slingshot]){
+        if([self.character collidesWithSlingshot:slingshot] && !self.character.attachedSlingshot){
             [slingshot attachNode:self.character];
+            //[self adjustScreen];
         }
         
         /* recycle slingshot if it is below the screen */
@@ -170,6 +150,7 @@
     }
     
     
+    /* check if the last slingshot is below the height screen top, if so, then make another one above. */
     SBSlingshot *lastSlingshot = [self.activeSlingshots lastObject];
     CGFloat highestSlingshotY = MAX(CGPointPlusVector(lastSlingshot.position, lastSlingshot.lineVector).y,
                                     CGPointPlusVector(lastSlingshot.position, CGVectorNegate(lastSlingshot.lineVector)).y);
@@ -177,10 +158,31 @@
         [self addSlingshot:[self generateRandomSlingshotWithY:highestSlingshotY+SLINGSHOT_SPACING
                                                  andMagnitude:SLINGSHOT_LINE_RADIUS]];
         lastSlingshot = [self.activeSlingshots lastObject];
-        highestSlingshotY = CGPointPlusVector(lastSlingshot.position, lastSlingshot.lineVector).y;
+        highestSlingshotY = highestSlingshotY+SLINGSHOT_SPACING;
     }
     
     previousTime = currentTime;
+}
+
+-(void)adjustScreen{
+    /* if the character is above 3/5 of the screen, then move the screen down */
+    
+    CGFloat relativeY = self.character.position.y + self.anchorPoint.y*self.size.height;
+    if(relativeY > CHARACTER_RELATIVE_MAX_HEIGHT){
+        CGFloat displacement = relativeY-CHARACTER_RELATIVE_MAX_HEIGHT;
+        //self.anchorPoint = CGPointMake(self.anchorPoint.x, self.anchorPoint.y - displacement/self.size.height);
+        
+        for (SKNode *child in self.children) {
+            if(child == self.walls)continue;
+            [child runAction:[SKAction moveTo:CGPointPlusVector(child.position,
+                                                                CGVectorMake(0, -displacement))
+                                     duration:SCREEN_ADJUSTMENT_TIME]];
+            //child.position = CGPointPlusVector(child.position,
+            //                                   CGVectorMake(0, -displacement));
+        }
+        
+        
+    }
 }
 
 @end

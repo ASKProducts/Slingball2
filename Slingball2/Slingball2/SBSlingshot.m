@@ -98,8 +98,13 @@
     self.line1.zPosition = self.attachedNode.zPosition-1;
     self.line2.zPosition = self.attachedNode.zPosition-1;
     
+    [self startTracking];
     
-    
+
+    return YES;
+}
+
+-(void)startTracking{
     [self runAction:[SKAction repeatActionForever:[SKAction customActionWithDuration:SLINGSHOT_FOLLOW_UPDATES_INTERVAL actionBlock:^(SKNode *node, CGFloat elapsedTime) {
         
         CGPoint p1point = CGPointFromVector(self.lineVector);
@@ -117,12 +122,14 @@
         self.line1.path = l1Path;
         self.line2.path = l2Path;
         
-        
+        if(CGPointEqualToPoint(self.position, self.attachedNode.position)){
+            [self removeActionForKey:@"track"];
+            
+        }
     }]] withKey:@"track"];
-    
 
-    return YES;
 }
+
 -(void)detachNode{
     self.attachedNode = nil;
     [self removeActionForKey:@"track"];
